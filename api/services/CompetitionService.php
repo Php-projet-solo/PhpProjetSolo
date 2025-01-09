@@ -1,6 +1,6 @@
 <?php
 
-class CompetitionController
+class CompetitionService
 {
     private $pdo;
 
@@ -9,36 +9,14 @@ class CompetitionController
         $this->pdo = $pdo;
     }
 
-    public function handleRequest($method, $id = null, $input = null)
-    {
-        switch ($method) {
-            case 'GET':
-                return $id ? $this->getCompetition($id) : $this->getAllCompetitions();
-            case 'POST':
-                return $this->createCompetition($input);
-            case 'PUT':
-                if (!$id) {
-                    throw new Exception("ID is required for PUT");
-                }
-                return $this->updateCompetition($id, $input);
-            case 'DELETE':
-                if (!$id) {
-                    throw new Exception("ID is required for DELETE");
-                }
-                return $this->deleteCompetition($id);
-            default:
-                throw new Exception("Unsupported HTTP method");
-        }
-    }
-
-    private function getAllCompetitions()
+    public function getAllCompetitions()
     {
         $stmt = $this->pdo->prepare("SELECT * FROM competitions");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private function getCompetition($id)
+    public function getCompetition($id)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM competitions WHERE id_competition = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -51,21 +29,18 @@ class CompetitionController
 
         return $competition;
     }
-    private function createCompetition($input)
-    {
-        if (!isset($input['nom'], $input['date'], $input['photo'])) {
-            throw new Exception("Invalid input");
-        }
 
+    public function createCompetition($input)
+    {
         $stmt = $this->pdo->prepare("
-        INSERT INTO competitions (
-            nom, description, date, prixentree, latitude, longitude,
-            nompersonnecontacter, emailcontacter, photo
-        ) VALUES (
-            :nom, :description, :date, :prixentree, :latitude, :longitude,
-            :nompersonnecontacter, :emailcontacter, :photo
-        )
-    ");
+            INSERT INTO competitions (
+                nom, description, date, prixentree, latitude, longitude,
+                nompersonnecontacter, emailcontacter, photo
+            ) VALUES (
+                :nom, :description, :date, :prixentree, :latitude, :longitude,
+                :nompersonnecontacter, :emailcontacter, :photo
+            )
+        ");
 
         $stmt->execute([
             ':nom' => $input['nom'],
@@ -82,14 +57,8 @@ class CompetitionController
         return ['id' => $this->pdo->lastInsertId()];
     }
 
-
-    private function updateCompetition($id, $input)
+    public function updateCompetition($id, $input)
     {
-        // Vérification de l'entrée
-        if (empty($input)) {
-            throw new Exception("No input provided for update");
-        }
-
         $fields = [];
         $params = [':id' => $id];
 
@@ -142,13 +111,12 @@ class CompetitionController
         return ['message' => 'Competition updated successfully'];
     }
 
-    private function deleteCompetition($id)
+    public function deleteCompetition($id)
     {
         $stmt = $this->pdo->prepare("DELETE FROM competitions WHERE id_competition = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return ['message' => 'Competitions deleted'];
+        return ['message' => 'Competition deleted'];
     }
 }
-
 ?>
