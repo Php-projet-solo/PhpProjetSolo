@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Compétitions</title>
+</head>
+<body>
+<h1>Liste des Compétitions</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for competition in competitions %}
+        <tr>
+            <td>{{ competition.id }}</td>
+            <td>{{ competition.name }}</td>
+            <td>{{ competition.date }}</td>
+            <td>{{ competition.description }}</td>
+            <td>
+                <a href="/edit/{{ competition.id }}">Edit</a>
+                <a href="/delete/{{ competition.id }}">Delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="/create">Créer une compétition</a>
+</body>
+</html>

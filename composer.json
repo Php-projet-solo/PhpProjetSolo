@@ -1,0 +1,9 @@
+{
+    "require": {
+        "twig/twig": "^3.18",
+        "symfony/mailer": "^7.2",
+        "firebase/php-jwt": "^6.10",
+        "mpdf/mpdf": "^8.2",
+        "ext-openssl": "*"
+    }
+}
