@@ -2,10 +2,10 @@
 
 require_once 'controller/CompetitionController.php';
 require_once 'services/CompetitionService.php';
+
 class CompetitionController
 {
     private $competitionService;
-    private $apiKeyValidator;
 
     public function __construct($pdo)
     {
@@ -14,6 +14,21 @@ class CompetitionController
 
     public function handleRequest($method, $id = null, $input = null)
     {
+        if (!isset($_COOKIE['auth_token'])) {
+            http_response_code(401);
+            echo json_encode(['message' => 'Authentication cookie missing']);
+            exit;
+        }
+
+        $token = $_COOKIE['auth_token'];
+        $decoded = AuthHelper::validateToken($token);
+
+        if (!$decoded) {
+            http_response_code(401);
+            echo json_encode(['message' => 'Invalid token']);
+            exit;
+        }
+
         switch ($method) {
             case 'GET':
                 return $id
