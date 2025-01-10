@@ -14,13 +14,21 @@ class CompetitionController
 
     public function handleRequest($method, $id = null, $input = null)
     {
-        if (!isset($_COOKIE['auth_token'])) {
+        $headers = getallheaders();
+        if (!isset($headers['Authorization'])) {
             http_response_code(401);
-            echo json_encode(['message' => 'Authentication cookie missing']);
+            echo json_encode(['message' => 'Authorization header missing']);
             exit;
         }
 
-        $token = $_COOKIE['auth_token'];
+        $authHeader = $headers['Authorization'];
+        if (!str_starts_with($authHeader, 'Bearer ')) {
+            http_response_code(401);
+            echo json_encode(['message' => 'Invalid Authorization format']);
+            exit;
+        }
+
+        $token = substr($authHeader, 7);
         $decoded = AuthHelper::validateToken($token);
 
         if (!$decoded) {

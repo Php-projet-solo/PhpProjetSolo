@@ -19,35 +19,29 @@ try {
 
         if ($username === 'admin' && $password === 'password') {
             $token = AuthHelper::generateToken(1);
-            setcookie('auth_token', $token, [
-                'expires' => time() + 3600,
-                'path' => '/',
-                'httponly' => true,
-                'secure' => isset($_SERVER['HTTPS']),
-                'samesite' => 'Strict',
-            ]);
-            echo json_encode(['message' => 'Login successful']);
+            echo json_encode(['message' => 'Login successful', 'token' => $token]);
         } else {
             http_response_code(401);
             echo json_encode(['error' => 'Invalid credentials']);
         }
     } elseif ($method === 'POST' && isset($input['action']) && $input['action'] === 'logout') {
-        setcookie('auth_token', '', [
-            'expires' => time() - 3600,
-            'path' => '/',
-            'httponly' => true,
-            'secure' => isset($_SERVER['HTTPS']),
-            'samesite' => 'Strict',
-        ]);
         echo json_encode(['message' => 'Logout successful']);
     } else {
-        if (!isset($_COOKIE['auth_token'])) {
+        $headers = getallheaders();
+        if (!isset($headers['Authorization'])) {
             http_response_code(401);
-            echo json_encode(['error' => 'Authentication cookie missing']);
+            echo json_encode(['error' => 'Authorization header missing']);
             exit;
         }
 
-        $token = $_COOKIE['auth_token'];
+        $authHeader = $headers['Authorization'];
+        if (!str_starts_with($authHeader, 'Bearer ')) {
+            http_response_code(401);
+            echo json_encode(['error' => 'Invalid Authorization format']);
+            exit;
+        }
+
+        $token = substr($authHeader, 7);
         $decoded = AuthHelper::validateToken($token);
 
         if (!$decoded) {

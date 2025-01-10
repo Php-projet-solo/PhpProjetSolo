@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ action }} une compétition</title>
+</head>
+<body>
+<h1>{{ action }} une compétition</h1>
+<form method="post">
+    <label>Nom : <input type="text" name="nom" value="{{ competition.nom ?? '' }}"></label><br>
+    <label>Description : <textarea name="description">{{ competition.description ?? '' }}</textarea></label><br>
+    <label>Date : <input type="date" name="date" value="{{ competition.date ?? '' }}"></label><br>
+    <label>Prix d'entrée : <input type="number" name="prixEntree" value="{{ competition.prixEntree ?? '' }}"></label><br>
+    <label>Latitude : <input type="text" name="latitude" value="{{ competition.latitude ?? '' }}"></label><br>
+    <label>Longitude : <input type="text" name="longitude" value="{{ competition.longitude ?? '' }}"></label><br>
+    <label>Nom du contact : <input type="text" name="nomPersonneContacter" value="{{ competition.nomPersonneContacter ?? '' }}"></label><br>
+    <label>Email du contact : <input type="email" name="emailContacter" value="{{ competition.emailContacter ?? '' }}"></label><br>
+    <label>Photo : <input type="text" name="photo" value="{{ competition.photo ?? '' }}"></label><br>
+    <button type="submit">{{ action }}</button>
+</form>
+</body>
+</html>
