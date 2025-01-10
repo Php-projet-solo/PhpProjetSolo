@@ -1,0 +1,31 @@
+<h1>Modifier la compétition</h1>
+<form action="/crud web/index.php?action=update&id={{ competition.id_competition }}" method="post">
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="nom" value="{{ competition.nom }}" required>
+
+    <label for="description">Description :</label>
+    <textarea id="description" name="description" required>{{ competition.description }}</textarea>
+
+    <label for="date">Date :</label>
+    <input type="date" id="date" name="date" value="{{ competition.date }}" required>
+
+    <label for="prixentree">Prix d'entrée :</label>
+    <input type="number" id="prixentree" name="prixentree" value="{{ competition.prixEntree }}" required>
+
+    <label for="latitude">Latitude :</label>
+    <input type="text" id="latitude" name="latitude" value="{{ competition.latitude }}">
+
+    <label for="longitude">Longitude :</label>
+    <input type="text" id="longitude" name="longitude" value="{{ competition.longitude }}">
+
+    <label for="nomPersonneContacter">Nom du contact :</label>
+    <input type="text" id="nomPersonneContacter" name="nomPersonneContacter" value="{{ competition.nomPersonneContacter }}">
+
+    <label for="emailContacter">Email du contact :</label>
+    <input type="email" id="emailContacter" name="emailContacter" value="{{ competition.emailContacter }}">
+
+    <label for="photo">Photo :</label>
+    <input type="text" id="photo" name="photo" value="{{ competition.photo }}">
+
+    <button type="submit">Mettre à jour</button>
+</form>

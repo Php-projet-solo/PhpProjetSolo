@@ -1,0 +1,38 @@
+<table>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Prix de l'entrée</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Nom de la personne à contacter</th>
+        <th>Email de contact</th>
+        <th>Photo</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for competition in competitions %}
+        <tr>
+            <td>{{ competition.id_competition }}</td>
+            <td>{{ competition.nom }}</td>
+            <td>{{ competition.description }}</td>
+            <td>{{ competition.date }}</td>
+            <td>{{ competition.prixentree }}</td>
+            <td>{{ competition.latitude }}</td>
+            <td>{{ competition.longitude }}</td>
+            <td>{{ competition.nompersonnecontacter }}</td>
+            <td>{{ competition.emailcontacter }}</td>
+            <td>{{ competition.photo }}</td>
+            <td>
+                <a href="/crud web/index.php?action=update&id={{ competition.id_competition }}">Modifier</a>
+                <a href="/crud web/index.php?action=delete&id={{ competition.id_competition }}"
+                   onclick="return confirm('Voulez-vous vraiment supprimer cette compétition ?')">Supprimer</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
