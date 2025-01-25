@@ -1,7 +1,15 @@
 <?php
+session_start();
 require_once 'CompetitionController.php';
 require_once 'database.php';
 require_once 'twig.php';
+
+function generateCsrfToken(): string
+{
+    $token = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token'] = $token;
+    return $token;
+}
 
 $controller = new CompetitionController($pdo);
 $action = $_GET['action'] ?? 'read';
@@ -9,30 +17,36 @@ $action = $_GET['action'] ?? 'read';
 switch ($action) {
     case 'create':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $controller->create($_POST);
+            $csrfToken = $_POST['csrf_token'] ?? '';
+            $controller->create($_POST, $csrfToken);
             header('Location: index.php?action=read');
             exit;
         } else {
-            echo $twig->render('competition/create.html.twig');
+            $csrfToken = generateCsrfToken();
+            echo $twig->render('competition/create.html.twig', ['csrf_token' => $csrfToken]);
         }
         break;
     case 'read':
         $competitions = $controller->readAll();
-        echo $twig->render('competition/read.html.twig', ['competitions' => $competitions]);
+        $csrfToken = generateCsrfToken();
+        echo $twig->render('competition/read.html.twig', ['competitions' => $competitions, 'csrf_token' => $csrfToken]);
         break;
     case 'update':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $controller->update($_GET['id'], $_POST);
+            $csrfToken = $_POST['csrf_token'] ?? '';
+            $controller->update($_GET['id'], $_POST, $csrfToken);
             header('Location: index.php?action=read');
             exit;
         } else {
             $competition = $controller->getById($_GET['id']);
-            echo $twig->render('competition/update.html.twig', ['competition' => $competition]);
+            $csrfToken = generateCsrfToken();
+            echo $twig->render('competition/update.html.twig', ['competition' => $competition, 'csrf_token' => $csrfToken]);
         }
         break;
     case 'delete':
         if (isset($_GET['id'])) {
-            $controller->delete($_GET['id']);
+            $csrfToken = $_GET['csrf_token'] ?? '';
+            $controller->delete($_GET['id'], $csrfToken);
         }
         header('Location: index.php?action=read');
         exit;

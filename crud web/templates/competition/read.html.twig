@@ -1,3 +1,5 @@
+<h1>Liste des compétitions</h1>
+<a href="/crud web/index.php?action=create" class="btn btn-primary">Créer une nouvelle compétition</a>
 <table>
     <thead>
     <tr>
@@ -18,18 +20,19 @@
     {% for competition in competitions %}
         <tr>
             <td>{{ competition.id_competition }}</td>
-            <td>{{ competition.nom }}</td>
-            <td>{{ competition.description }}</td>
-            <td>{{ competition.date }}</td>
-            <td>{{ competition.prixentree }}</td>
-            <td>{{ competition.latitude }}</td>
-            <td>{{ competition.longitude }}</td>
-            <td>{{ competition.nompersonnecontacter }}</td>
-            <td>{{ competition.emailcontacter }}</td>
-            <td>{{ competition.photo }}</td>
+            <td>{{ competition.nom|e }}</td>
+            <td>{{ competition.description|e }}</td>
+            <td>{{ competition.date|e }}</td>
+            <td>{{ competition.prixentree|e }}</td>
+            <td>{{ competition.latitude|e }}</td>
+            <td>{{ competition.longitude|e }}</td>
+            <td>{{ competition.nompersonnecontacter|e }}</td>
+            <td>{{ competition.emailcontacter|e }}</td>
+            <td>{{ competition.photo|e }}</td>
             <td>
-                <a href="/crud web/index.php?action=update&id={{ competition.id_competition }}">Modifier</a>
-                <a href="/crud web/index.php?action=delete&id={{ competition.id_competition }}"
+                <a href="/crud web/index.php?action=update&id={{ competition.id_competition }}&csrf_token={{ csrf_token }}"
+                   onclick="return confirm('Voulez-vous vraiment modifier cette compétition ?')">Modifier</a>
+                <a href="/crud web/index.php?action=delete&id={{ competition.id_competition }}&csrf_token={{ csrf_token }}"
                    onclick="return confirm('Voulez-vous vraiment supprimer cette compétition ?')">Supprimer</a>
             </td>
         </tr>

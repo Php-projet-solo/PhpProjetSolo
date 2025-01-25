@@ -1,31 +1,32 @@
-<h1>Modifier la compétition</h1>
 <form action="/crud web/index.php?action=update&id={{ competition.id_competition }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
     <label for="nom">Nom :</label>
-    <input type="text" id="nom" name="nom" value="{{ competition.nom }}" required>
+    <input type="text" id="nom" name="nom" value="{{ competition.nom }}" required><br><br>
 
     <label for="description">Description :</label>
-    <textarea id="description" name="description" required>{{ competition.description }}</textarea>
+    <textarea id="description" name="description" required>{{ competition.description }}</textarea><br><br>
 
     <label for="date">Date :</label>
-    <input type="date" id="date" name="date" value="{{ competition.date }}" required>
+    <input type="date" id="date" name="date" value="{{ competition.date }}" required><br><br>
 
     <label for="prixentree">Prix d'entrée :</label>
-    <input type="number" id="prixentree" name="prixentree" value="{{ competition.prixEntree }}" required>
+    <input type="number" id="prixentree" name="prixentree" value="{{ competition.prixEntree }}" required><br><br>
 
     <label for="latitude">Latitude :</label>
-    <input type="text" id="latitude" name="latitude" value="{{ competition.latitude }}">
+    <input type="text" id="latitude" name="latitude" value="{{ competition.latitude }}"><br><br>
 
     <label for="longitude">Longitude :</label>
-    <input type="text" id="longitude" name="longitude" value="{{ competition.longitude }}">
+    <input type="text" id="longitude" name="longitude" value="{{ competition.longitude }}"><br><br>
 
-    <label for="nomPersonneContacter">Nom du contact :</label>
-    <input type="text" id="nomPersonneContacter" name="nomPersonneContacter" value="{{ competition.nomPersonneContacter }}">
+    <label for="nomPersonneContacter">Nom de la personne à contacter :</label>
+    <input type="text" id="nomPersonneContacter" name="nomPersonneContacter" value="{{ competition.nomPersonneContacter }}"><br><br>
 
-    <label for="emailContacter">Email du contact :</label>
-    <input type="email" id="emailContacter" name="emailContacter" value="{{ competition.emailContacter }}">
+    <label for="emailContacter">Email de contact :</label>
+    <input type="email" id="emailContacter" name="emailContacter" value="{{ competition.emailContacter }}"><br><br>
 
-    <label for="photo">Photo :</label>
-    <input type="text" id="photo" name="photo" value="{{ competition.photo }}">
+    <label for="photo">URL de la photo :</label>
+    <input type="text" id="photo" name="photo" value="{{ competition.photo }}"><br><br>
 
     <button type="submit">Mettre à jour</button>
 </form>
