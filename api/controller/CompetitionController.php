@@ -15,13 +15,14 @@ class CompetitionController
     public function handleRequest($method, $id = null, $input = null)
     {
         $headers = getallheaders();
-        if (!isset($headers['Authorization'])) {
+        $headers = array_change_key_case($headers, CASE_LOWER);
+        if (!isset($headers['authorization'])) {
             http_response_code(401);
             echo json_encode(['message' => 'Authorization header missing']);
             exit;
         }
 
-        $authHeader = $headers['Authorization'];
+        $authHeader = $headers['authorization'];
         if (!str_starts_with($authHeader, 'Bearer ')) {
             http_response_code(401);
             echo json_encode(['message' => 'Invalid Authorization format']);

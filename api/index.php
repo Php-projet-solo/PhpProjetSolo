@@ -28,13 +28,15 @@ try {
         echo json_encode(['message' => 'Logout successful']);
     } else {
         $headers = getallheaders();
-        if (!isset($headers['Authorization'])) {
+        $headers = array_change_key_case($headers, CASE_LOWER);
+    //        echo json_encode($headers);
+        if (!isset($headers['authorization'])) {
             http_response_code(401);
             echo json_encode(['error' => 'Authorization header missing']);
             exit;
         }
 
-        $authHeader = $headers['Authorization'];
+        $authHeader = $headers['authorization'];
         if (!str_starts_with($authHeader, 'Bearer ')) {
             http_response_code(401);
             echo json_encode(['error' => 'Invalid Authorization format']);

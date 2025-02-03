@@ -30,7 +30,7 @@
             <td>{{ competition.emailcontacter|e }}</td>
             <td>{{ competition.photo|e }}</td>
             <td>
-                <a href="/crud web/index.php?action=update&id={{ competition.id_competition }}&csrf_token={{ csrf_token }}"
+                <a href="/crud web/index.php?action=update&id={{ competition.id_competition }}"
                    onclick="return confirm('Voulez-vous vraiment modifier cette compétition ?')">Modifier</a>
                 <a href="/crud web/index.php?action=delete&id={{ competition.id_competition }}&csrf_token={{ csrf_token }}"
                    onclick="return confirm('Voulez-vous vraiment supprimer cette compétition ?')">Supprimer</a>
