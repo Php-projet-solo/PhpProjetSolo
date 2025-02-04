@@ -46,11 +46,11 @@ class CompetitionService
             ':nom' => $input['nom'],
             ':description' => $input['description'] ?? null,
             ':date' => $input['date'],
-            ':prixentree' => $input['prixEntree'] ?? null,
+            ':prixentree' => $input['prixentree'] ?? null,
             ':latitude' => $input['latitude'] ?? null,
             ':longitude' => $input['longitude'] ?? null,
-            ':nompersonnecontacter' => $input['nomPersonneContacter'] ?? null,
-            ':emailcontacter' => $input['emailContacter'] ?? null,
+            ':nompersonnecontacter' => $input['nompersonnecontacter'] ?? null,
+            ':emailcontacter' => $input['emailcontacter'] ?? null,
             ':photo' => $input['photo']
         ]);
 
@@ -76,7 +76,7 @@ class CompetitionService
         }
         if (isset($input['prixEntree'])) {
             $fields[] = "prixentree = :prixentree";
-            $params[':prixentree'] = $input['prixEntree'];
+            $params[':prixentree'] = $input['prixentree'];
         }
         if (isset($input['latitude'])) {
             $fields[] = "latitude = :latitude";
@@ -88,11 +88,11 @@ class CompetitionService
         }
         if (isset($input['nomPersonneContacter'])) {
             $fields[] = "nompersonnecontacter = :nompersonnecontacter";
-            $params[':nompersonnecontacter'] = $input['nomPersonneContacter'];
+            $params[':nompersonnecontacter'] = $input['nompersonnepontacter'];
         }
         if (isset($input['emailContacter'])) {
             $fields[] = "emailcontacter = :emailcontacter";
-            $params[':emailcontacter'] = $input['emailContacter'];
+            $params[':emailcontacter'] = $input['emailcontacter'];
         }
         if (isset($input['photo'])) {
             $fields[] = "photo = :photo";
