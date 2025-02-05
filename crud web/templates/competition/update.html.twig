@@ -1,32 +1,393 @@
-<form action="/crud web/index.php?action=update&id={{ competition.id_competition }}" method="post">
+<form action="/crud web/index.php?action=update&id={{ competition.id_competition }}" method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-    <label for="nom">Nom :</label>
-    <input type="text" id="nom" name="nom" value="{{ competition.nom }}" required><br><br>
+    <div class="InputStyleContainer">
+        <input type="text" id="nom" name="nom" value="{{ competition.nom }}" required>
+        <label for="nom">Nom :</label>
+    </div>
 
-    <label for="description">Description :</label>
-    <textarea id="description" name="description" required>{{ competition.description }}</textarea><br><br>
+    <div class="InputStyleContainer">
+        <input type="text" id="description" name="description" value="{{ competition.description|raw }}" required>
+        <label for="description">Description :</label>
+    </div>
 
-    <label for="date">Date :</label>
-    <input type="text" id="date" name="date" value="{{ competition.date }}" required><br><br>
+    <input type="date" id="date" name="date" value="{{ competition.date|date('Y-m-d') }}" required>
 
-    <label for="prixentree">Prix d'entrée :</label>
-    <input type="number" id="prixentree" name="prixentree" value="{{ competition.prixentree }}" required><br><br>
+    <div class="InputStyleContainer">
+        <input type="text" id="prixentree" name="prixentree" value="{{ competition.prixentree }}" required>
+        <label for="prixentree">Prix d'entrée :</label>
+    </div>
 
-    <label for="latitude">Latitude :</label>
-    <input type="text" id="latitude" name="latitude" value="{{ competition.latitude }}"><br><br>
+    <div class="InputStyleContainer">
+        <input type="text" id="latitude" name="latitude" value="{{ competition.latitude }}">
+        <label for="latitude">Latitude :</label>
+    </div>
 
-    <label for="longitude">Longitude :</label>
-    <input type="text" id="longitude" name="longitude" value="{{ competition.longitude }}"><br><br>
+    <div class="InputStyleContainer">
+        <input type="text" id="longitude" name="longitude" value="{{ competition.longitude }}">
+        <label for="longitude">Longitude :</label>
+    </div>
 
-    <label for="nomPersonneContacter">Nom de la personne à contacter :</label>
-    <input type="text" id="nomPersonneContacter" name="nomPersonneContacter" value="{{ competition.nompersonnecontacter }}"><br><br>
+    <div class="InputStyleContainer">
+        <input type="text" id="nomPersonneContacter" name="nomPersonneContacter" value="{{ competition.nompersonnecontacter }}">
+        <label for="nomPersonneContacter">Nom du contact :</label>
+    </div>
 
-    <label for="emailContacter">Email de contact :</label>
-    <input type="email" id="emailContacter" name="emailContacter" value="{{ competition.emailcontacter }}"><br><br>
+    <div class="InputStyleContainer">
+        <input type="text" id="emailContacter" name="emailContacter" value="{{ competition.emailcontacter }}">
+        <label for="emailContacter">Email de contact :</label>
+    </div>
 
-    <label for="photo">URL de la photo :</label>
-    <input type="text" id="photo" name="photo" value="{{ competition.photo }}"><br><br>
+    <label for="photoInput">Choisir une photo :</label>
+    <input type="file" id="photoInput" name="photoInput" accept="image/*">
+    <input type="hidden" id="photo" name="photo" value="{{ competition.photo }}">
+
+    <div class="InputStyleContainer">
+        <h3>Image actuelle :</h3>
+        <img id="imagePreview" src="data:image/png;base64,{{ competition.photo }}" alt="Image actuelle" style="max-width: 300px; max-height: 300px;">
+    </div>
 
     <button type="submit">Mettre à jour</button>
+    <a href="index.php?action=read">Retour à la liste</a>
 </form>
+
+<style>
+    form, body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    body {
+        background-color: #23252B;
+        color: white;
+        font-family: "Verdana";
+    }
+
+    form {
+        background-color: #36383B;
+        border-radius: 30px;
+        padding: 12px;
+        margin: 10px;
+        z-index: 1;
+        width: 60%;
+    }
+
+    input {
+        border-radius: 12px;
+        padding: 6px 12px;
+        border: 1px solid white;
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+    }
+
+    label {
+        margin-bottom: 3px;
+        margin-top: 10px;
+    }
+
+    button {
+        margin: 10px;
+    }
+
+    h1 {
+        margin: 0;
+        margin-bottom: 18px;
+    }
+
+    .InputStyleContainer {
+        margin-bottom: 15px;
+    }
+
+    form button, form .InputStyleContainer label, form .InputStyleContainer input[type="text"] {
+        -moz-transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
+        -o-transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
+        -webkit-transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
+        transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
+    }
+
+    form .InputStyleContainer {
+        position: relative;
+    }
+
+    form .InputStyleContainer label {
+        transform-origin: left center;
+        color: white;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        font-size: 25px;
+        box-sizing: border-box;
+        padding: 15px 20px;
+        display: block;
+        position: absolute;
+        margin-top: -60px;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    form .InputStyleContainer input[type="text"] {
+        appearance: none;
+        background-color: #36383B;
+        border: 2px solid white;
+        line-height: 1.5;
+        font-size: 20px;
+        display: block;
+        box-sizing: border-box;
+        padding: 15px 20px;
+        border-radius: 60px;
+        color: white;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        position: relative;
+        z-index: 1;
+        width: 350px;
+    }
+
+    form .InputStyleContainer input[type="text"]:focus {
+        outline: none;
+        background: #23252B;
+        color: white;
+        margin-top: 40px;
+    }
+
+    form .InputStyleContainer input[type="text"]:valid {
+        margin-top: 40px;
+    }
+
+    form .InputStyleContainer input[type="text"]:focus ~ label {
+        -moz-transform: translate(0, -55px);
+        -ms-transform: translate(0, -55px);
+        -webkit-transform: translate(0, -55px);
+        transform: translate(0, -55px);
+    }
+
+    form .InputStyleContainer input[type="text"]:valid ~ label {
+        text-transform: uppercase;
+        font-style: italic;
+        -moz-transform: translate(5px, -55px) scale(0.6);
+        -ms-transform: translate(5px, -55px) scale(0.6);
+        -webkit-transform: translate(5px, -55px) scale(0.6);
+        transform: translate(5px, -55px) scale(0.6);
+        color: #2aff22;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #999;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+        background-color: #b2b2b2;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    input[type="date"] {
+        background-color: transparent;
+        color: white;
+        appearance: none;
+        border: 2px solid white;
+        line-height: 1.5;
+        font-size: 20px;
+        display: block;
+        box-sizing: border-box;
+        padding: 15px 20px;
+        border-radius: 60px;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        position: relative;
+        z-index: 1;
+        width: 350px;
+        margin-bottom: 15px;
+        color-scheme: light !important;
+    }
+
+    button {
+        font-size: 27px;
+        position: relative;
+        width: 190px;
+        height: 50px;
+        background-color: #36383B;
+        display: flex;
+        align-items: center;
+        color: white;
+        flex-direction: column;
+        justify-content: center;
+        border: none;
+        padding: 12px;
+        gap: 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin-top: 20px;
+    }
+
+    button::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        left: -5px;
+        margin: auto;
+        width: 200px;
+        height: 60px;
+        border-radius: 12px;
+        animation: gradient 20s ease infinite;
+        background: linear-gradient(-45deg, #A000C7, #40c9ff, #A000C7, #40c9ff, #A000C7, #40c9ff, #A000C7, #40c9ff);
+        background-size: 900% 900%;
+        z-index: -1;
+        pointer-events: none;
+        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    button::after {
+        content: "";
+        z-index: -1;
+        position: absolute;
+        inset: 0;
+        animation: gradient 20s ease infinite;
+        background: linear-gradient(-45deg, #A000C7, #40c9ff, #A000C7, #40c9ff, #A000C7, #40c9ff, #A000C7, #40c9ff);
+        background-size: 900% 900%;
+        transform: translate3d(0, 0, 0) scale(0.95);
+        filter: blur(15px);
+    }
+
+    button:hover::after {
+        filter: blur(30px);
+    }
+
+    button:hover::before {
+        transform: rotate(-180deg);
+    }
+
+    button:active::before {
+        scale: 0.7;
+    }
+
+    button:hover {
+        background-color: #23252B;
+        transition-delay: 0.6s;
+    }
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    a {
+        font-size: 27px;
+        position: relative;
+        width: 250px;
+        height: 50px;
+        background-color: #36383B;
+        display: flex;
+        align-items: center;
+        color: white;
+        flex-direction: column;
+        justify-content: center;
+        border: none;
+        padding: 12px;
+        gap: 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin-top: 20px;
+        margin-bottom: 18px;
+    }
+
+    a::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        left: -5px;
+        margin: auto;
+        width: 285px;
+        height: 84px;
+        border-radius: 12px;
+        animation: gradient 20s ease infinite;
+        background: linear-gradient(-45deg, #A000C7, #40c9ff, #A000C7, #40c9ff, #A000C7, #40c9ff, #A000C7, #40c9ff);
+        background-size: 900% 900%;
+        z-index: -1;
+        pointer-events: none;
+        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    a::after {
+        content: "";
+        z-index: -1;
+        position: absolute;
+        inset: 0;
+        animation: gradient 20s ease infinite;
+        background: linear-gradient(-45deg, #A000C7, #40c9ff, #A000C7, #40c9ff, #A000C7, #40c9ff, #A000C7, #40c9ff);
+        background-size: 900% 900%;
+        transform: translate3d(0, 0, 0) scale(0.95);
+        filter: blur(15px);
+    }
+
+    a:hover::after {
+        filter: blur(30px);
+    }
+
+    a:hover::before {
+        transform: rotate(180deg);
+    }
+
+    a:active::before {
+        scale: 0.7;
+    }
+
+    a:hover {
+        background-color: #23252B;
+        transition-delay: 0.6s;
+    }
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+</style>
+
+<script>
+    document.getElementById('photoInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const base64String = reader.result.split(',')[1];
+                document.getElementById('photo').value = base64String;
+
+                const imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = reader.result;
+                document.getElementById('imagePreviewContainer').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

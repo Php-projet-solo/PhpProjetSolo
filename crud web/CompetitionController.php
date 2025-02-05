@@ -34,6 +34,36 @@ class CompetitionController
             ':emailContacter' => filter_var($data['emailContacter'], FILTER_SANITIZE_EMAIL),
             ':photo' => htmlspecialchars($data['photo']),
         ]);
+
+        $this->sendEmailNotification($data['emailContacter'], $data['nom'], $data['description'], $data['date']);
+    }
+
+    private function sendEmailNotification($email, $nomCompetition, $description, $date)
+    {
+        $mail = new PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'timeo.blondeleau@gmail.com';
+            $mail->Password   = 'iydl uern mtah sidf';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            $mail->setFrom('timeo.blondeleau@gmail.com', 'Organisateur');
+            $mail->addAddress($email);
+
+            $mail->isHTML(true);
+            $mail->Subject = "Nouvelle compétition ajoutée : $nomCompetition";
+            $mail->Body    = "<h1>$nomCompetition</h1>
+                              <p>$description</p>
+                              <p>Date de la compétition : $date</p>";
+
+            $mail->send();
+        } catch (Exception $e) {
+            error_log("Erreur d'envoi de mail : {$mail->ErrorInfo}");
+        }
     }
 
     public function readAll()
