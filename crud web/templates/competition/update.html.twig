@@ -1,4 +1,14 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter une compétition</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
 <form action="/crud web/index.php?action=update&id={{ competition.id_competition }}" method="post" enctype="multipart/form-data">
+    <h1>Modifier une compétition</h1>
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
     <div class="InputStyleContainer">
@@ -11,10 +21,10 @@
         <label for="description">Description :</label>
     </div>
 
-    <input type="date" id="date" name="date" value="{{ competition.date|date('Y-m-d') }}" required>
+    <input type="datetime-local" id="date" name="date" value="{{ competition.date }}" required>
 
     <div class="InputStyleContainer">
-        <input type="text" id="prixentree" name="prixentree" value="{{ competition.prixentree }}" required>
+        <input type="number" id="prixentree" name="prixentree" value="{{ competition.prixentree }}" required>
         <label for="prixentree">Prix d'entrée :</label>
     </div>
 
@@ -34,7 +44,7 @@
     </div>
 
     <div class="InputStyleContainer">
-        <input type="text" id="emailContacter" name="emailContacter" value="{{ competition.emailcontacter }}">
+        <input type="email" id="emailContacter" name="emailContacter" value="{{ competition.emailcontacter }}">
         <label for="emailContacter">Email de contact :</label>
     </div>
 
@@ -50,7 +60,7 @@
     <button type="submit">Mettre à jour</button>
     <a href="index.php?action=read">Retour à la liste</a>
 </form>
-
+</body>
 <style>
     form, body {
         display: flex;
@@ -102,7 +112,7 @@
         margin-bottom: 15px;
     }
 
-    form button, form .InputStyleContainer label, form .InputStyleContainer input[type="text"] {
+    form button, form .InputStyleContainer label, form .InputStyleContainer input[type="text"], form .InputStyleContainer input[type="number"], form .InputStyleContainer input[type="email"] {
         -moz-transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
         -o-transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
         -webkit-transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
@@ -128,7 +138,7 @@
         pointer-events: none;
     }
 
-    form .InputStyleContainer input[type="text"] {
+    form .InputStyleContainer input[type="text"], form .InputStyleContainer input[type="number"], form .InputStyleContainer input[type="email"] {
         appearance: none;
         background-color: #36383B;
         border: 2px solid white;
@@ -146,25 +156,25 @@
         width: 350px;
     }
 
-    form .InputStyleContainer input[type="text"]:focus {
+    form .InputStyleContainer input[type="text"]:focus, form .InputStyleContainer input[type="number"]:focus, form .InputStyleContainer input[type="email"]:focus {
         outline: none;
         background: #23252B;
         color: white;
         margin-top: 40px;
     }
 
-    form .InputStyleContainer input[type="text"]:valid {
+    form .InputStyleContainer input[type="text"]:valid, form .InputStyleContainer input[type="number"]:valid, form .InputStyleContainer input[type="email"]:valid {
         margin-top: 40px;
     }
 
-    form .InputStyleContainer input[type="text"]:focus ~ label {
+    form .InputStyleContainer input[type="text"]:focus ~ label, form .InputStyleContainer input[type="text"]:valid ~ label, form .InputStyleContainer input[type="number"]:focus ~ label, form .InputStyleContainer input[type="number"]:valid ~ label, form .InputStyleContainer input[type="email"]:focus ~ label, form .InputStyleContainer input[type="email"]:valid ~ label, form input[type="file"]:focus ~ label {
         -moz-transform: translate(0, -55px);
         -ms-transform: translate(0, -55px);
         -webkit-transform: translate(0, -55px);
         transform: translate(0, -55px);
     }
 
-    form .InputStyleContainer input[type="text"]:valid ~ label {
+    form .InputStyleContainer input[type="text"]:valid ~ label, form .InputStyleContainer input[type="number"]:valid ~ label, form .InputStyleContainer input[type="email"]:valid ~ label {
         text-transform: uppercase;
         font-style: italic;
         -moz-transform: translate(5px, -55px) scale(0.6);
@@ -192,7 +202,7 @@
         background-color: transparent;
     }
 
-    input[type="date"] {
+    input[type="datetime-local"] {
         background-color: transparent;
         color: white;
         appearance: none;
