@@ -1,5 +1,8 @@
 <h1>Liste des compétitions</h1>
 <a href="/crud web/index.php?action=create" class="btn btn-primary">Créer une nouvelle compétition</a>
+<a href="/crud web/index.php?action=generateFixtures&csrf_token={{ csrf_token }}" class="btn btn-success">
+    Générer des Fixtures
+</a>
 <table>
     <thead>
     <tr>
@@ -21,7 +24,7 @@
         <tr>
             <td>{{ competition.id_competition }}</td>
             <td>{{ competition.nom|e }}</td>
-            <td>{{ competition.description|e }}</td>
+            <td>{{ competition.description|raw }}</td>
             <td>{{ competition.date|e }}</td>
             <td>{{ competition.prixentree|e }}</td>
             <td>{{ competition.latitude|e }}</td>

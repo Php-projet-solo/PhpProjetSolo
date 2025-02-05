@@ -46,9 +46,13 @@
         <label for="emailContacter">Email de contact :</label>
     </div>
 
-    <div class="InputStyleContainer">
-        <input required type="text" id="photo" name="photo">
-        <label for="photo">URL de la photo :</label>
+    <label for="photoInput">Choisir une photo :</label>
+    <input required type="file" id="photoInput" name="photoInput" accept="image/*">
+    <input type="hidden" id="photo" name="photo">
+
+    <div id="imagePreviewContainer" style="display:none;">
+        <h3>Image sélectionnée :</h3>
+        <img id="imagePreview" src="" alt="Aperçu de l'image" style="max-width: 300px; max-height: 300px;">
     </div>
 
     <button type="submit">Ajouter</button>
@@ -379,3 +383,21 @@
         }
     }
 </style>
+
+<script>
+    document.getElementById('photoInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const base64String = reader.result.split(',')[1];
+                document.getElementById('photo').value = base64String;
+
+                const imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = reader.result;
+                document.getElementById('imagePreviewContainer').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

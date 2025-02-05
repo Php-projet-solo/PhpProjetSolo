@@ -15,6 +15,14 @@ $controller = new CompetitionController($pdo);
 $action = $_GET['action'] ?? 'read';
 
 switch ($action) {
+    case 'generateFixtures':
+        $csrfToken = $_GET['csrf_token'] ?? '';
+        if ($csrfToken !== $_SESSION['csrf_token']) {
+            die('Échec de la vérification CSRF.');
+        }
+        $controller->generateFixtures($csrfToken);
+        header('Location: index.php?action=read');
+        exit;
     case 'create':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $csrfToken = $_POST['csrf_token'] ?? '';
