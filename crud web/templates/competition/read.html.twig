@@ -28,7 +28,13 @@
             <td>{{ competition.longitude|e }}</td>
             <td>{{ competition.nompersonnecontacter|e }}</td>
             <td>{{ competition.emailcontacter|e }}</td>
-            <td>{{ competition.photo|e }}</td>
+            <td>
+                {% if competition.photo %}
+                    <img src="data:image/jpeg;base64,{{ competition.photo }}" alt="Photo" width="100">
+                {% else %}
+                    Pas d'image valable
+                {% endif %}
+            </td>
             <td>
                 <a href="/crud web/index.php?action=update&id={{ competition.id_competition }}"
                    onclick="return confirm('Voulez-vous vraiment modifier cette compétition ?')">Modifier</a>
