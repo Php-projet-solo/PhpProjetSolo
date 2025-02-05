@@ -9,12 +9,23 @@ class CompetitionService
         $this->pdo = $pdo;
     }
 
-    public function getAllCompetitions()
+    public function getAllCompetitions($page, $limit)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM competitions");
+        $offset = ($page - 1) * $limit;
+
+        $stmt = $this->pdo->prepare("
+        SELECT * FROM competitions 
+        ORDER BY date DESC 
+        LIMIT :limit OFFSET :offset
+    ");
+
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function getCompetition($id)
     {

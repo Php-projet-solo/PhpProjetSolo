@@ -31,18 +31,20 @@ class CompetitionController
 
         $token = substr($authHeader, 7);
         $decoded = AuthHelper::validateToken($token);
-
         if (!$decoded) {
             http_response_code(401);
             echo json_encode(['message' => 'Invalid token']);
             exit;
         }
 
+        $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+        $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 30;
+
         switch ($method) {
             case 'GET':
                 return $id
                     ? $this->competitionService->getCompetition($id)
-                    : $this->competitionService->getAllCompetitions();
+                    : $this->competitionService->getAllCompetitions($page, $limit);
             case 'POST':
                 return $this->competitionService->createCompetition($input);
             case 'PUT':
