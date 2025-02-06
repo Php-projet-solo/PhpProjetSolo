@@ -5,6 +5,7 @@
         "firebase/php-jwt": "^6.10",
         "mpdf/mpdf": "^8.2",
         "ext-openssl": "*",
-        "phpmailer/phpmailer": "^6.9"
+        "phpmailer/phpmailer": "^6.9",
+        "tecnickcom/tcpdf": "^6.7"
     }
 }

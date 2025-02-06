@@ -43,6 +43,7 @@
                    onclick="return confirm('Voulez-vous vraiment modifier cette compétition ?')">Modifier</a>
                 <a href="/crud web/index.php?action=delete&id={{ competition.id_competition }}&csrf_token={{ csrf_token }}"
                    onclick="return confirm('Voulez-vous vraiment supprimer cette compétition ?')">Supprimer</a>
+                <a href="/crud web/export_pdf.php?id={{ competition.id_competition }}" class="btn btn-warning">Exporter PDF</a>
             </td>
         </tr>
     {% endfor %}
