@@ -1,4 +1,8 @@
 <?php
+//require 'vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 require_once 'database.php';
 require_once __DIR__ . '/data/CompetitionJeuVideo.php';
 
@@ -35,10 +39,20 @@ class CompetitionController
             ':photo' => htmlspecialchars($data['photo']),
         ]);
 
-//        $this->sendEmailNotification($data['emailContacter'], $data['nom'], $data['description'], $data['date']);
-    }
+        $this->sendEmailNotification(
+            $data['emailContacter'],
+            $data['nom'],
+            $data['description'],
+            $data['date'],
+            $data['prixentree'],
+            $data['latitude'],
+            $data['longitude'],
+            $data['nomPersonneContacter'],
+            $data['emailContacter'],
+            $data['photo']
+        );    }
 
-    private function sendEmailNotification($email, $nomCompetition, $description, $date)
+    private function sendEmailNotification($email, $nomCompetition, $description, $date, $prixEntree, $latitude, $longitude, $nomPersonneContacter, $emailContacter, $photoBase64)
     {
         $mail = new PHPMailer(true);
 
@@ -50,17 +64,31 @@ class CompetitionController
             $mail->Password   = 'iydl uern mtah sidf';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
+            $mail->CharSet    = 'UTF-8';
 
             $mail->setFrom('timeo.blondeleau@gmail.com', 'Organisateur');
             $mail->addAddress($email);
 
+            $imageData = base64_decode($photoBase64);
+            $imagePath = sys_get_temp_dir() . "/competition_image.jpg";
+            file_put_contents($imagePath, $imageData);
+
+            $mail->addAttachment($imagePath, "competition.jpg");
+
             $mail->isHTML(true);
             $mail->Subject = "Nouvelle compétition ajoutée : $nomCompetition";
-            $mail->Body    = "<h1>$nomCompetition</h1>
-                              <p>$description</p>
-                              <p>Date de la compétition : $date</p>";
+            $mail->Body    = "
+            <h1>$nomCompetition</h1>
+            <p><strong>Description :</strong> $description</p>
+            <p><strong>Date :</strong> $date</p>
+            <p><strong>Prix d'entrée :</strong> $prixEntree €</p>
+            <p><strong>Localisation :</strong> Latitude $latitude, Longitude $longitude</p>
+            <p><strong>Personne à contacter :</strong> $nomPersonneContacter ($emailContacter)</p>
+            ";
 
             $mail->send();
+
+            unlink($imagePath);
         } catch (Exception $e) {
             error_log("Erreur d'envoi de mail : {$mail->ErrorInfo}");
         }
