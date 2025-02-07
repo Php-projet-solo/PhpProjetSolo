@@ -17,39 +17,52 @@ try {
         $username = $input['username'] ?? null;
         $password = $input['password'] ?? null;
 
-        if ($username === 'admin' && $password === 'password') {
-            $token = AuthHelper::generateToken(1);
-            echo json_encode(['message' => 'Login successful', 'token' => $token]);
-        } else {
+        if (!$username || !$password) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Username and password are required']);
+            exit;
+        }
+
+        $stmt = $pdo->prepare("SELECT id, password_hash FROM admins WHERE username = :username");
+        $stmt->execute(['username' => $username]);
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$admin || !password_verify($password, $admin['password_hash'])) {
             http_response_code(401);
             echo json_encode(['error' => 'Invalid credentials']);
+            exit;
         }
+
+        $token = AuthHelper::generateToken($admin['id']);
+        echo json_encode(['message' => 'Login successful', 'token' => $token]);
     } elseif ($method === 'POST' && isset($input['action']) && $input['action'] === 'logout') {
         echo json_encode(['message' => 'Logout successful']);
     } else {
-        $headers = getallheaders();
-        $headers = array_change_key_case($headers, CASE_LOWER);
-    //        echo json_encode($headers);
-        if (!isset($headers['authorization'])) {
-            http_response_code(401);
-            echo json_encode(['error' => 'Authorization header missing']);
-            exit;
-        }
+        if ($method !== 'GET') {
+            $headers = getallheaders();
+            $headers = array_change_key_case($headers, CASE_LOWER);
 
-        $authHeader = $headers['authorization'];
-        if (!str_starts_with($authHeader, 'Bearer ')) {
-            http_response_code(401);
-            echo json_encode(['error' => 'Invalid Authorization format']);
-            exit;
-        }
+            if (!isset($headers['authorization'])) {
+                http_response_code(401);
+                echo json_encode(['error' => 'Authorization header missing']);
+                exit;
+            }
 
-        $token = substr($authHeader, 7);
-        $decoded = AuthHelper::validateToken($token);
+            $authHeader = $headers['authorization'];
+            if (!str_starts_with($authHeader, 'Bearer ')) {
+                http_response_code(401);
+                echo json_encode(['error' => 'Invalid Authorization format']);
+                exit;
+            }
 
-        if (!$decoded) {
-            http_response_code(401);
-            echo json_encode(['error' => 'Invalid token']);
-            exit;
+            $token = substr($authHeader, 7);
+            $decoded = AuthHelper::validateToken($token);
+
+            if (!$decoded) {
+                http_response_code(401);
+                echo json_encode(['error' => 'Invalid token']);
+                exit;
+            }
         }
 
         $response = $controller->handleRequest($method, $id, $input);

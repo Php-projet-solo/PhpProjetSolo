@@ -85,7 +85,7 @@ class CompetitionService
             $fields[] = "date = :date";
             $params[':date'] = $input['date'];
         }
-        if (isset($input['prixEntree'])) {
+        if (isset($input['prixentree'])) {
             $fields[] = "prixentree = :prixentree";
             $params[':prixentree'] = $input['prixentree'];
         }
@@ -97,11 +97,11 @@ class CompetitionService
             $fields[] = "longitude = :longitude";
             $params[':longitude'] = $input['longitude'];
         }
-        if (isset($input['nomPersonneContacter'])) {
+        if (isset($input['nompersonnecontacter'])) {
             $fields[] = "nompersonnecontacter = :nompersonnecontacter";
-            $params[':nompersonnecontacter'] = $input['nompersonnepontacter'];
+            $params[':nompersonnecontacter'] = $input['nompersonnecontacter'];
         }
-        if (isset($input['emailContacter'])) {
+        if (isset($input['emailcontacter'])) {
             $fields[] = "emailcontacter = :emailcontacter";
             $params[':emailcontacter'] = $input['emailcontacter'];
         }

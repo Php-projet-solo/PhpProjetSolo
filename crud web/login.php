@@ -1,6 +1,8 @@
 <?php
-session_start();
 require_once 'database.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 $stmt = $pdo->query("SELECT COUNT(*) FROM admins");
 $adminCount = $stmt->fetchColumn();

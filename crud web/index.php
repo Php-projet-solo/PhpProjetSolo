@@ -2,7 +2,9 @@
 require_once 'CompetitionController.php';
 require_once 'database.php';
 require_once 'twig.php';
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 function generateCsrfToken(): string
 {
     $token = bin2hex(random_bytes(32));
@@ -47,7 +49,6 @@ switch ($action) {
         }
         break;
     case 'read':
-        require_once 'auth.php';
         $competitions = $controller->readAll();
         $csrfToken = generateCsrfToken();
         echo $twig->render('competition/read.html.twig', ['competitions' => $competitions, 'csrf_token' => $csrfToken]);

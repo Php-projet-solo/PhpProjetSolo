@@ -16,25 +16,28 @@ class CompetitionController
     {
         $headers = getallheaders();
         $headers = array_change_key_case($headers, CASE_LOWER);
-        if (!isset($headers['authorization'])) {
-            http_response_code(401);
-            echo json_encode(['message' => 'Authorization header missing']);
-            exit;
-        }
 
-        $authHeader = $headers['authorization'];
-        if (!str_starts_with($authHeader, 'Bearer ')) {
-            http_response_code(401);
-            echo json_encode(['message' => 'Invalid Authorization format']);
-            exit;
-        }
+        if ($method !== 'GET') {
+            if (!isset($headers['authorization'])) {
+                http_response_code(401);
+                echo json_encode(['message' => 'Authorization header missing']);
+                exit;
+            }
 
-        $token = substr($authHeader, 7);
-        $decoded = AuthHelper::validateToken($token);
-        if (!$decoded) {
-            http_response_code(401);
-            echo json_encode(['message' => 'Invalid token']);
-            exit;
+            $authHeader = $headers['authorization'];
+            if (!str_starts_with($authHeader, 'Bearer ')) {
+                http_response_code(401);
+                echo json_encode(['message' => 'Invalid Authorization format']);
+                exit;
+            }
+
+            $token = substr($authHeader, 7);
+            $decoded = AuthHelper::validateToken($token);
+            if (!$decoded) {
+                http_response_code(401);
+                echo json_encode(['message' => 'Invalid token']);
+                exit;
+            }
         }
 
         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
