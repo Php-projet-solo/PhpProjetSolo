@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Ajouter une compétition</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -38,6 +40,8 @@
         <label for="longitude">Longitude :</label>
     </div>
 
+    <div id="map"></div>
+
     <div class="InputStyleContainer">
         <input type="text" id="nomPersonneContacter" name="nomPersonneContacter" value="{{ competition.nompersonnecontacter }}">
         <label for="nomPersonneContacter">Nom du contact :</label>
@@ -58,10 +62,17 @@
     </div>
 
     <button type="submit">Mettre à jour</button>
-    <a href="index.php?action=read">Retour à la liste</a>
+    <a class="button" href="index.php?action=read">Retour à la liste</a>
 </form>
 </body>
 <style>
+    #map {
+        height: 400px;
+        width: 60%;
+        margin-bottom: 15px;
+        border-radius: 12px;
+    }
+
     form, body {
         display: flex;
         flex-direction: column;
@@ -302,7 +313,7 @@
         }
     }
 
-    a {
+    .button {
         font-size: 27px;
         position: relative;
         width: 250px;
@@ -323,7 +334,7 @@
         margin-bottom: 18px;
     }
 
-    a::before {
+    .button::before {
         content: "";
         position: absolute;
         inset: 0;
@@ -340,7 +351,7 @@
         transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    a::after {
+    .button::after {
         content: "";
         z-index: -1;
         position: absolute;
@@ -352,19 +363,19 @@
         filter: blur(15px);
     }
 
-    a:hover::after {
+    .button:hover::after {
         filter: blur(30px);
     }
 
-    a:hover::before {
+    .button:hover::before {
         transform: rotate(180deg);
     }
 
-    a:active::before {
+    .button:active::before {
         scale: 0.7;
     }
 
-    a:hover {
+    .button:hover {
         background-color: #23252B;
         transition-delay: 0.6s;
     }
@@ -399,5 +410,55 @@
             };
             reader.readAsDataURL(file);
         }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof L === 'undefined') {
+            console.error("Leaflet n'est pas chargé !");
+            return;
+        }
+
+        var map = L.map('map').setView([48.8566, 2.3522], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var latitudeInput = document.getElementById("latitude");
+        var longitudeInput = document.getElementById("longitude");
+
+        var marker;
+
+        function updateMap(lat, lng) {
+            map.setView([lat, lng], 13);
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup("Position sélectionnée")
+                    .openPopup();
+            }
+        }
+
+        var lat = parseFloat(latitudeInput.value) || 48.8566;
+        var lng = parseFloat(longitudeInput.value) || 2.3522;
+
+        updateMap(lat, lng);
+
+        latitudeInput.addEventListener("change", function () {
+            updateMap(parseFloat(latitudeInput.value) || 48.8566, parseFloat(longitudeInput.value) || 2.3522);
+        });
+
+        longitudeInput.addEventListener("change", function () {
+            updateMap(parseFloat(latitudeInput.value) || 48.8566, parseFloat(longitudeInput.value) || 2.3522);
+        });
+
+        map.on('click', function (e) {
+            latitudeInput.value = e.latlng.lat.toFixed(6);
+            longitudeInput.value = e.latlng.lng.toFixed(6);
+            updateMap(e.latlng.lat, e.latlng.lng);
+        });
     });
 </script>
