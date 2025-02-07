@@ -1,0 +1,13 @@
+<h1>Détails de la compétition {{  competition.nom|e }}</h1>
+<p><strong>Nom :</strong> {{ competition.nom|e }}</p>
+<p><strong>Description :</strong> {{ competition.description|raw }}</p>
+<p><strong>Date :</strong> {{ competition.date|e }}</p>
+<p><strong>Prix de l'entrée :</strong> {{ competition.prixentree|e }} €</p>
+<p><strong>Localisation :</strong> Latitude {{ competition.latitude }}, Longitude {{ competition.longitude }}</p>
+<p><strong>Contact :</strong> {{ competition.nompersonnecontacter }} ({{ competition.emailcontacter }})</p>
+{% if competition.photo %}
+    <img src="data:image/jpeg;base64,{{ competition.photo }}" alt="Photo" width="300">
+{% else %}
+    <p>Pas d'image disponible</p>
+{% endif %}
+<a href="/crud web/index.php?action=read" class="btn btn-secondary">Retour</a>

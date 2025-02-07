@@ -31,19 +31,44 @@ $html = "<h1>{$competition['nom']}</h1>
          <p><strong>Contact :</strong> {$competition['nompersonnecontacter']} ({$competition['emailcontacter']})</p>";
 
 $pdf->writeHTML($html, true, false, true, false, '');
-
 $pdf->Ln(20);
 
 if (!empty($competition['photo'])) {
     $imageData = base64_decode($competition['photo']);
-    $tempImage = tempnam(sys_get_temp_dir(), 'img') . '.jpg';
-    file_put_contents($tempImage, $imageData);
 
-    list($width, $height) = getimagesize($tempImage);
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->buffer($imageData);
 
-    $pdf->Image($tempImage, 15, '', $width / 4, $height / 4, 'JPG');
+    $extensions = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif',
+        'image/webp' => 'webp',
+    ];
 
-    unlink($tempImage);
+    if (isset($extensions[$mimeType])) {
+        $ext = $extensions[$mimeType];
+        $tempImage = tempnam(sys_get_temp_dir(), 'img') . '.' . $ext;
+        file_put_contents($tempImage, $imageData);
+
+        list($width, $height) = getimagesize($tempImage);
+
+        $maxWidth = 100; // en mm
+        if ($width > $maxWidth * 3.78) {
+            $scale = $maxWidth / ($width / 3.78);
+            $newWidth = $maxWidth;
+            $newHeight = ($height / 3.78) * $scale;
+        } else {
+            $newWidth = $width / 3.78;
+            $newHeight = $height / 3.78;
+        }
+
+        $pdf->Image($tempImage, 15, '', $newWidth, $newHeight, strtoupper($ext));
+
+        unlink($tempImage);
+    } else {
+        $pdf->writeHTML('<p style="color:red;">Format d\'image non supporté.</p>', true, false, true, false, '');
+    }
 }
 
 $pdf->Output('competition_' . $id . '.pdf', 'D');

@@ -22,8 +22,8 @@ class CompetitionController
         }
 
         $query = "
-        INSERT INTO competitions (nom, description, date, prixentree, latitude, longitude, nompersonnecontacter, emailcontacter, photo)
-        VALUES (:nom, :description, :date, :prixentree, :latitude, :longitude, :nomPersonneContacter, :emailContacter, :photo)
+    INSERT INTO competitions (nom, description, date, prixentree, latitude, longitude, nompersonnecontacter, emailcontacter, photo)
+    VALUES (:nom, :description, :date, :prixentree, :latitude, :longitude, :nomPersonneContacter, :emailContacter, :photo)
     ";
 
         $stmt = $this->pdo->prepare($query);
@@ -39,6 +39,8 @@ class CompetitionController
             ':photo' => htmlspecialchars($data['photo']),
         ]);
 
+        $idCompetition = $this->pdo->lastInsertId();
+
         $this->sendEmailNotification(
             $data['emailContacter'],
             $data['nom'],
@@ -49,10 +51,12 @@ class CompetitionController
             $data['longitude'],
             $data['nomPersonneContacter'],
             $data['emailContacter'],
-            $data['photo']
-        );    }
+            $data['photo'],
+            $idCompetition
+        );
+    }
 
-    private function sendEmailNotification($email, $nomCompetition, $description, $date, $prixEntree, $latitude, $longitude, $nomPersonneContacter, $emailContacter, $photoBase64)
+    private function sendEmailNotification($email, $nomCompetition, $description, $date, $prixEntree, $latitude, $longitude, $nomPersonneContacter, $emailContacter, $photoBase64, $idCompetition)
     {
         $mail = new PHPMailer(true);
 
@@ -69,11 +73,14 @@ class CompetitionController
             $mail->setFrom('timeo.blondeleau@gmail.com', 'Organisateur');
             $mail->addAddress($email);
 
+            // Décoder l'image et la stocker temporairement
             $imageData = base64_decode($photoBase64);
             $imagePath = sys_get_temp_dir() . "/competition_image.jpg";
             file_put_contents($imagePath, $imageData);
-
             $mail->addAttachment($imagePath, "competition.jpg");
+
+            // Génération du lien dynamique avec l'ID
+            $urlDetail = "http://localhost/crud%20web/index.php?action=detail&id=" . urlencode($idCompetition);
 
             $mail->isHTML(true);
             $mail->Subject = "Nouvelle compétition ajoutée : $nomCompetition";
@@ -84,6 +91,7 @@ class CompetitionController
             <p><strong>Prix d'entrée :</strong> $prixEntree €</p>
             <p><strong>Localisation :</strong> Latitude $latitude, Longitude $longitude</p>
             <p><strong>Personne à contacter :</strong> $nomPersonneContacter ($emailContacter)</p>
+            <p><strong>Lien vers la page de détail :</strong> <a href='$urlDetail'>$urlDetail</a></p>
             ";
 
             $mail->send();
@@ -93,6 +101,7 @@ class CompetitionController
             error_log("Erreur d'envoi de mail : {$mail->ErrorInfo}");
         }
     }
+
 
     public function readAll()
     {

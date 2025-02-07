@@ -15,6 +15,17 @@ $controller = new CompetitionController($pdo);
 $action = $_GET['action'] ?? 'read';
 
 switch ($action) {
+    case 'detail':
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            die('ID de compétition manquant.');
+        }
+        $competition = $controller->getById($id);
+        if (!$competition) {
+            die('Compétition introuvable.');
+        }
+        echo $twig->render('competition/detail.html.twig', ['competition' => $competition]);
+        break;
     case 'generateFixtures':
         $csrfToken = $_GET['csrf_token'] ?? '';
         if ($csrfToken !== $_SESSION['csrf_token']) {
