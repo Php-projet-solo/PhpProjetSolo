@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once 'CompetitionController.php';
 require_once 'database.php';
 require_once 'twig.php';
@@ -27,6 +26,7 @@ switch ($action) {
         echo $twig->render('competition/detail.html.twig', ['competition' => $competition]);
         break;
     case 'generateFixtures':
+        require_once 'auth.php';
         $csrfToken = $_GET['csrf_token'] ?? '';
         if ($csrfToken !== $_SESSION['csrf_token']) {
             die('Échec de la vérification CSRF.');
@@ -35,6 +35,7 @@ switch ($action) {
         header('Location: index.php?action=read');
         exit;
     case 'create':
+        require_once 'auth.php';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $csrfToken = $_POST['csrf_token'] ?? '';
             $controller->create($_POST, $csrfToken);
@@ -46,11 +47,13 @@ switch ($action) {
         }
         break;
     case 'read':
+        require_once 'auth.php';
         $competitions = $controller->readAll();
         $csrfToken = generateCsrfToken();
         echo $twig->render('competition/read.html.twig', ['competitions' => $competitions, 'csrf_token' => $csrfToken]);
         break;
     case 'update':
+        require_once 'auth.php';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $csrfToken = $_POST['csrf_token'] ?? '';
             $controller->update($_GET['id'], $_POST, $csrfToken);
@@ -63,6 +66,7 @@ switch ($action) {
         }
         break;
     case 'delete':
+        require_once 'auth.php';
         if (isset($_GET['id'])) {
             $csrfToken = $_GET['csrf_token'] ?? '';
             $controller->delete($_GET['id'], $csrfToken);

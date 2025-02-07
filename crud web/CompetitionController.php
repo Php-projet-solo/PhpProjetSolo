@@ -79,7 +79,6 @@ class CompetitionController
             file_put_contents($imagePath, $imageData);
             $mail->addAttachment($imagePath, "competition.jpg");
 
-            // Génération du lien dynamique avec l'ID
             $urlDetail = "http://localhost/crud%20web/index.php?action=detail&id=" . urlencode($idCompetition);
 
             $mail->isHTML(true);
@@ -91,7 +90,7 @@ class CompetitionController
             <p><strong>Prix d'entrée :</strong> $prixEntree €</p>
             <p><strong>Localisation :</strong> Latitude $latitude, Longitude $longitude</p>
             <p><strong>Personne à contacter :</strong> $nomPersonneContacter ($emailContacter)</p>
-            <p><strong>Lien vers la page de détail :</strong> <a href='$urlDetail'>$urlDetail</a></p>
+            <p><strong><a href='$urlDetail'>Lien vers la page de détail</a></strong></p>
             ";
 
             $mail->send();
